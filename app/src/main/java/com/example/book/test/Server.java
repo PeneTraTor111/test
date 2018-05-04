@@ -25,32 +25,31 @@ public class Server extends Thread {
                 Thread.sleep(1000);
                 if (!flag)
                     continue;
-                NetworkActivity.connected = true;
                 mSocket = mServer.accept();
                 if (mSocket == null)
                     continue;
-
                 byte[] buff = new byte[256];
-                int len;
+                int len = 0;
                 outputStream = new BufferedOutputStream(mSocket.getOutputStream());
                 inputStream = new BufferedInputStream(mSocket.getInputStream());
                 /*Connecting*/
                 if (!NetworkActivity.connected){
+                    boolean ss = Thread.currentThread().isInterrupted();
                     while (!Thread.currentThread().isInterrupted()&&(len=inputStream.read(buff)) != -1) {
                         if (!(len>0)){
                             continue;
                         }
                         NetworkActivity.connected = true;
+                        outputStream.write(1);
+                        outputStream.flush();
                         break;
                     }
                     outputStream.close();
                     inputStream.close();
                     continue;
                 }
-                else{
-                    //transort data
+                //transport data
 
-                }
                 outputStream.close();
                 inputStream.close();
             }

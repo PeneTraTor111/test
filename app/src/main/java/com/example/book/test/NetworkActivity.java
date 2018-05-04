@@ -28,9 +28,6 @@ public class NetworkActivity extends AppCompatActivity {
         tv.setText(IP=getIpAddress());
         tv.setGravity(Gravity.CENTER);
 
-        EditText input=findViewById(R.id.ipInput);
-        inputIP = input.getText().toString();
-
         Button client = findViewById(R.id.clientButton);
         Button server = findViewById(R.id.serverButton);
 
@@ -55,7 +52,7 @@ public class NetworkActivity extends AppCompatActivity {
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
         try {
-            Thread.currentThread().sleep(5000);//阻断5秒
+            Thread.currentThread().sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -72,6 +69,8 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     private void toBeAClient(){
+        EditText input=findViewById(R.id.ipInput);
+        inputIP = input.getText().toString();
         Client clientThread = new Client ();
         clientThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();

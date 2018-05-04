@@ -22,8 +22,7 @@ public class Client extends Thread{
     @Override
     public void run() {
         super.run();
-        //System.out.println("Server is waiting");
-        ByteArrayOutputStream byteArray ;
+
         BufferedInputStream inputStream;
         BufferedOutputStream outputStream;
 
@@ -36,19 +35,18 @@ public class Client extends Thread{
             try {
                 Thread.sleep(1000);
                 if (!flag){
-                    mClient.close();
                     continue;
                 }
-                NetworkActivity.connected = true;
                 byte[] buff = new byte[256];
-                int len ;
+                int len = 0;
                 String msg;
                 inputStream = new BufferedInputStream(mClient.getInputStream());
                 outputStream = new BufferedOutputStream(mClient.getOutputStream());
-
+                outputStream.write(1);
+                outputStream.flush();
                 /*Connecting*/
                 while (!Thread.currentThread().isInterrupted()&&(len = inputStream.read(buff)) != -1){
-                    System.out.println("***");
+                    NetworkActivity.connected = true;
                     msg = new String(buff, 0, len);
                 }
                 outputStream.close();
