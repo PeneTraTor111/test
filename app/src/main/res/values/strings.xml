@@ -1,0 +1,9 @@
+<resources>
+    //登录界面部分
+    <string name="app_name">aaa</string>
+    <string name="ipInput">Please input the other player\'s ip</string>
+    <string name="startButton">start</string>
+    <string name="yourIp">your ip</string>
+    <string name="inputText">ip</string>
+    <string name="serverButton">as sever</string>
+</resources>
