@@ -3,28 +3,40 @@ package com.example.book.test;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
 import android.content.Intent;
 import android.view.View;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.widget.Button;
 
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiInfo;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static boolean connected = false;
-    public static String IP;
-    public static String inputIP;
+    public static boolean isOffline = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView tv=findViewById(R.id.showYourIpAddress);
+        Button offline = findViewById(R.id.offline);
+        Button online = findViewById(R.id.online);
+
+        offline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isOffline = true;
+                Intent intent = new Intent(MainActivity.this,GameActivity.class);
+                startActivity(intent);
+            }
+        });
+        online.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isOffline = false;
+                Intent intent = new Intent(MainActivity.this,NetworkActivity.class);
+                startActivity(intent);
+            }
+        });
+        /*TextView tv=findViewById(R.id.showYourIpAddress);
         tv.setText(IP=getIpAddress());
         tv.setGravity(Gravity.CENTER);
 
@@ -37,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
         */
         //connect((Button)findViewById(R.id.startButton));
-        Button client = findViewById(R.id.startButton);
+        /*Button client = findViewById(R.id.startButton);
         Button server = findViewById(R.id.serverButton);
 
         server.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     connect as a server and jump to gameactivity
     */
-    private void toBeAServer(){
+    /*private void toBeAServer(){
         Server serverThread = new Server ();
         serverThread.start();
         Toast.makeText(MainActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
@@ -77,11 +89,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "等待超时,请重新尝试建立服务器端", Toast.LENGTH_SHORT).show();
             serverThread.interrupt();
         }
-    }
+    }*/
     /*
     connect as a client and jump to gameActivity
     */
-    private void toBeAClient(){
+   /* private void toBeAClient(){
         Client clientThread = new Client ();
         clientThread.start();
         Toast.makeText(MainActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
@@ -110,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
             connenctFailDialog.show();
             clientThread.interrupt();
         }
-    }
-    //connect as a client and jump to gameactivity
+    }*/
+        //connect as a client and jump to gameactivity
     /*
     private void connect(final Button bt){
         bt.setOnClickListener(new View.OnClickListener(){
@@ -142,15 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     */
-    /*Get IP*/
-    private String getIpAddress(){
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        System.out.println("This is what wifimanager gets");
-        System.out.println(ipAddress);
-        String ipAddressFormatted = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-        return ipAddressFormatted;
+
     }
 }
 

@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 public class Client extends Thread{
     public Socket mClient;
-    private String ip = MainActivity.inputIP;
+    private String ip = NetworkActivity.inputIP;
     private boolean flag = true;
     @Override
     public void run() {
@@ -39,7 +39,7 @@ public class Client extends Thread{
                     mClient.close();
                     continue;
                 }
-                MainActivity.connected = true;
+                NetworkActivity.connected = true;
                 byte[] buff = new byte[256];
                 int len ;
                 String msg;

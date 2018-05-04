@@ -25,6 +25,7 @@ public class Server extends Thread {
                 Thread.sleep(1000);
                 if (!flag)
                     continue;
+                NetworkActivity.connected = true;
                 mSocket = mServer.accept();
                 if (mSocket == null)
                     continue;
@@ -34,12 +35,12 @@ public class Server extends Thread {
                 outputStream = new BufferedOutputStream(mSocket.getOutputStream());
                 inputStream = new BufferedInputStream(mSocket.getInputStream());
                 /*Connecting*/
-                if (!MainActivity.connected){
+                if (!NetworkActivity.connected){
                     while (!Thread.currentThread().isInterrupted()&&(len=inputStream.read(buff)) != -1) {
                         if (!(len>0)){
                             continue;
                         }
-                        MainActivity.connected = true;
+                        NetworkActivity.connected = true;
                         break;
                     }
                     outputStream.close();
