@@ -4,6 +4,8 @@ package com.example.book.test;
  * Created by BOOK on 2018/5/2.
  */
 
+import android.support.annotation.Nullable;
+
 import java.net.*;
 import java.io.*;
 
@@ -11,10 +13,10 @@ public class Server extends Thread {
     public ServerSocket mServer;
     public Socket mSocket = null;
     private boolean flag = true;
+    private static BufferedInputStream inputStream;
+    private static BufferedOutputStream outputStream;
     @Override
     public void run(){
-        BufferedOutputStream outputStream;
-        BufferedInputStream inputStream;
 
         try {
             mServer = new ServerSocket(8888);
@@ -34,7 +36,6 @@ public class Server extends Thread {
                 inputStream = new BufferedInputStream(mSocket.getInputStream());
                 /*Connecting*/
                 if (!NetworkActivity.connected){
-                    boolean ss = Thread.currentThread().isInterrupted();
                     while (!Thread.currentThread().isInterrupted()&&(len=inputStream.read(buff)) != -1) {
                         if (!(len>0)){
                             continue;
@@ -44,17 +45,50 @@ public class Server extends Thread {
                         outputStream.flush();
                         break;
                     }
-                    outputStream.close();
-                    inputStream.close();
-                    continue;
                 }
-                //transport data
-
+                while (!Thread.currentThread().isInterrupted()){}
                 outputStream.close();
                 inputStream.close();
             }
             catch (InterruptedException e) {}
             catch (IOException e) {}
+        }
+    }
+
+    public static synchronized boolean dataWrite(byte [] send){
+        if(!Thread.currentThread().isInterrupted()){
+            try {
+                outputStream.write(send);
+                outputStream.flush();
+                return true;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else{
+            System.out.println("Connection is interrupted.");
+            return false;
+        }
+    }
+
+    @Nullable
+    public static synchronized byte [] dataRead(){
+        if(!Thread.currentThread().isInterrupted()){
+            try {
+                byte [] get =new byte [512];
+                inputStream.read(get);
+                return get;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else{
+            System.out.println("Connection is interrupted.");
+            return null;
         }
     }
 }

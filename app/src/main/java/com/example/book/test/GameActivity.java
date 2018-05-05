@@ -12,6 +12,11 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+       /* byte [] send = {1,2,3,4,5};
+        byte [] read = null;
+        if (NetworkActivity.isClient) NetworkActivity.clientThread.dataWrite(send);
+        if (NetworkActivity.isServer) read = NetworkActivity.serverThread.dataRead();*/
     }
 
     //Confirm to exit, jump back to mainactivity

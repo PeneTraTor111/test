@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.book.test.NetworkActivity">
 
+    <ImageView
+        android:id="@+id/NetworkloginImage"
+        android:layout_width="721dp"
+        android:layout_height="388dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/login" />
+
     <EditText
         android:id="@+id/ipInput"
         android:layout_width="300dp"
@@ -13,11 +23,14 @@
         android:layout_marginBottom="64dp"
         android:layout_marginEnd="110dp"
         android:hint="@string/ipInput"
+        android:textColorHint="#FFFFF0"
         android:inputType="none"
         android:maxLength="40"
+        android:textColor="#FFFFF0"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/whiteEditText"/>
 
     <Button
         android:id="@+id/clientButton"
@@ -45,6 +58,7 @@
         android:layout_height="40dp"
         android:layout_marginBottom="136dp"
         android:layout_marginEnd="110dp"
+        android:textColor="#FFFFF0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -56,6 +70,7 @@
         android:layout_marginStart="96dp"
         android:gravity="center"
         android:text="@string/yourIp"
+        android:textColor="#FFFFF0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -67,7 +82,8 @@
         android:layout_marginStart="96dp"
         android:gravity="center"
         android:text="@string/inputText"
+        android:textColor="#FFFFF0"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

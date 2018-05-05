@@ -18,6 +18,11 @@ public class NetworkActivity extends AppCompatActivity {
     public static boolean connected = false;
     public static String IP;
     public static String inputIP;
+    public static Client clientThread;
+    public static Server serverThread;
+    public static boolean isServer = false;
+    public static boolean isClient = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +52,7 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     private void toBeAServer(){
-        Server serverThread = new Server ();
+        serverThread = new Server ();
         serverThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
@@ -59,6 +64,7 @@ public class NetworkActivity extends AppCompatActivity {
 
         if(connected){
             Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
+            isServer = true;
             Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
             startActivity(intent);
         }
@@ -71,7 +77,7 @@ public class NetworkActivity extends AppCompatActivity {
     private void toBeAClient(){
         EditText input=findViewById(R.id.ipInput);
         inputIP = input.getText().toString();
-        Client clientThread = new Client ();
+        clientThread = new Client ();
         clientThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
@@ -84,6 +90,7 @@ public class NetworkActivity extends AppCompatActivity {
         if(connected){
             //if succeed
             Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
+            isClient = true;
             Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
             startActivity(intent);
         }

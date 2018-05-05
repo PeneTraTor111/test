@@ -6,4 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.book.test.GameActivity">
 
+    <ImageView
+        android:id="@+id/gameBackground"
+        android:layout_width="1362dp"
+        android:layout_height="402dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.648"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/gamebackground" />
 </android.support.constraint.ConstraintLayout>

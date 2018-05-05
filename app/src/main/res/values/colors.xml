@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color> <!--白色 -->
+    <color name="ivory">#FFFFF0</color> <!--象牙色 -->
+    <color name="navajowhite">#FFDEAD</color> <!--纳瓦白 -->
 </resources>

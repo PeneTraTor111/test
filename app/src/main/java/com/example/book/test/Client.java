@@ -19,12 +19,11 @@ public class Client extends Thread{
     public Socket mClient;
     private String ip = NetworkActivity.inputIP;
     private boolean flag = true;
+    private static BufferedInputStream inputStream;
+    private static BufferedOutputStream outputStream;
     @Override
     public void run() {
         super.run();
-
-        BufferedInputStream inputStream;
-        BufferedOutputStream outputStream;
 
         while (!Thread.currentThread().isInterrupted()) {
             try{
@@ -37,7 +36,7 @@ public class Client extends Thread{
                 if (!flag){
                     continue;
                 }
-                byte[] buff = new byte[256];
+                byte[] buff = new byte[4];
                 int len = 0;
                 String msg;
                 inputStream = new BufferedInputStream(mClient.getInputStream());
@@ -46,58 +45,56 @@ public class Client extends Thread{
                 outputStream.flush();
                 /*Connecting*/
                 while (!Thread.currentThread().isInterrupted()&&(len = inputStream.read(buff)) != -1){
+                    if (!(len>0)){
+                        continue;
+                    }
                     NetworkActivity.connected = true;
-                    msg = new String(buff, 0, len);
+                    break;
                 }
+                while (!Thread.currentThread().isInterrupted()){}
                 outputStream.close();
                 inputStream.close();
             }
             catch (InterruptedException e) {}
             catch (IOException e) {}
         }
-        /*try {
-            while (!Thread.currentThread().isInterrupted()) {
-                if (byteArray != null)
-                    byteArray.reset();
-                else
-                    byteArray = new ByteArrayOutputStream();
-                System.out.println("______________________________________________________________________ydf:wt 1");
-                socket = new java.net.Socket();
-                Thread.sleep(1000);
 
-                String ip = MainActivity.IP;
-                socket.connect(new InetSocketAddress(ip, 8888), 10000); // hard-code server address
+    }
 
-                inputStream = new BufferedInputStream(socket.getInputStream());
-                outputStream = new BufferedOutputStream(socket.getOutputStream());
-                byte[] buff = new byte[256];
-                byte[] tmp = null;
-                int len = 0;
-                String msg ;
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+    public static synchronized boolean dataWrite(byte [] send){
+        if(!Thread.currentThread().isInterrupted()){
             try {
-                if (outputStream != null) {
-                    outputStream.close();
-                    outputStream = null;
-                }
-                if (inputStream != null) {
-                    inputStream.close();
-                    inputStream = null;
-                }
-                if (socket != null) {
-                    socket.close();
-                    socket = null;
-                }
-                if (byteArray != null) {
-                    byteArray.close();
-                }
-            } catch (Exception e) {
+                outputStream.write(send);
+                outputStream.flush();
+                return true;
             }
-        }*/
+            catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        else{
+            System.out.println("Connection is interrupted.");
+            return false;
+        }
+    }
+
+    public static synchronized byte [] dataRead(){
+        if(!Thread.currentThread().isInterrupted()){
+            try {
+                byte [] get =new byte [512];
+                inputStream.read(get);
+                return get;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        else{
+            System.out.println("Connection is interrupted.");
+            return null;
+        }
     }
 
 }

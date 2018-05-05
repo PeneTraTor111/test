@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.book.test.MainActivity">
 
+
+    <ImageView
+        android:id="@+id/loginImage"
+        android:layout_width="721dp"
+        android:layout_height="388dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/login" />
+
     <Button
         android:id="@+id/offline"
         android:layout_width="75dp"
