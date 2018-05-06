@@ -46,7 +46,9 @@ public class Server extends Thread {
                         break;
                     }
                 }
-                while (!Thread.currentThread().isInterrupted()){}
+                while (!Thread.currentThread().isInterrupted()){
+
+                }
                 outputStream.close();
                 inputStream.close();
             }
@@ -55,7 +57,7 @@ public class Server extends Thread {
         }
     }
 
-    public static synchronized boolean dataWrite(byte [] send){
+    public synchronized boolean dataWrite(byte [] send){
         if(!Thread.currentThread().isInterrupted()){
             try {
                 outputStream.write(send);
@@ -74,7 +76,7 @@ public class Server extends Thread {
     }
 
     @Nullable
-    public static synchronized byte [] dataRead(){
+    public synchronized byte [] dataRead(){
         if(!Thread.currentThread().isInterrupted()){
             try {
                 byte [] get =new byte [512];

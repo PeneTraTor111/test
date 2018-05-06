@@ -1,7 +1,9 @@
 package com.example.book.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.Toast;
+
 
 public class NetworkActivity extends AppCompatActivity {
 
@@ -24,10 +27,12 @@ public class NetworkActivity extends AppCompatActivity {
     public static boolean isClient = false;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_network);
+
 
         TextView tv=findViewById(R.id.showYourIpAddress);
         tv.setText(IP=getIpAddress());
@@ -56,22 +61,35 @@ public class NetworkActivity extends AppCompatActivity {
         serverThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
-        try {
-            Thread.currentThread().sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            private Handler handler = new Handler();
+            @Override
+            public void run() {
+                try {
+                    Thread.currentThread().sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(connected){
+                            Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
+                            isServer = true;
+                            Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
+                            System.out.println("eeeeeeeeeeeeeeeee");
+                            startActivity(intent);
+                        }
+                        else {
+                            Toast.makeText(NetworkActivity.this, "等待超时,请重新尝试建立服务器端", Toast.LENGTH_SHORT).show();
+                            serverThread.interrupt();
+                        }
+                    }
+                });
+            }
+        }).start();
 
-        if(connected){
-            Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
-            isServer = true;
-            Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
-            startActivity(intent);
-        }
-        else {
-            Toast.makeText(NetworkActivity.this, "等待超时,请重新尝试建立服务器端", Toast.LENGTH_SHORT).show();
-            serverThread.interrupt();
-        }
+
     }
 
     private void toBeAClient(){
@@ -81,31 +99,43 @@ public class NetworkActivity extends AppCompatActivity {
         clientThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
-        try {
-            Thread.currentThread().sleep(5000);//阻断5秒
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if(connected){
-            //if succeed
-            Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
-            isClient = true;
-            Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
-            startActivity(intent);
-        }
-        else {
-            AlertDialog.Builder connenctFailDialog=new AlertDialog.Builder(NetworkActivity.this);
-            connenctFailDialog.setMessage("Connect fail!");
-            connenctFailDialog.setPositiveButton("try again",new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-
+        new Thread(new Runnable() {
+            private Handler handler = new Handler();
+            @Override
+            public void run() {
+                try {
+                    Thread.currentThread().sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-            });
-            connenctFailDialog.show();
-            clientThread.interrupt();
-        }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(connected){
+                            //if succeed
+                            Toast.makeText(NetworkActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
+                            isClient = true;
+                            Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            AlertDialog.Builder connenctFailDialog=new AlertDialog.Builder(NetworkActivity.this);
+                            connenctFailDialog.setMessage("Connect fail!");
+                            connenctFailDialog.setPositiveButton("try again",new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                            connenctFailDialog.show();
+                            clientThread.interrupt();
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
     }
 
     /*Get IP*/

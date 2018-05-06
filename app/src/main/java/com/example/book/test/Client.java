@@ -5,15 +5,17 @@ package com.example.book.test;
  */
 
 
-import android.widget.EditText;
-import android.widget.TextView;
+
+
+import android.support.annotation.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
-import java.net.*;
-import java.util.LinkedList;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 
 public class Client extends Thread{
     public Socket mClient;
@@ -51,7 +53,19 @@ public class Client extends Thread{
                     NetworkActivity.connected = true;
                     break;
                 }
-                while (!Thread.currentThread().isInterrupted()){}
+                while (!Thread.currentThread().isInterrupted()){
+                    /*if (needToSend && !needToRecieve) {
+                        outputStream.write(dataTosend);
+                        outputStream.flush();
+                        hasCompleted = true;
+                    }
+                    if (!needToSend && needToRecieve){
+                        byte [] get =new byte [512];
+                        inputStream.read(get);
+                        dataToRecieve = get;
+                        hasCompleted = true;
+                    }*/
+                }
                 outputStream.close();
                 inputStream.close();
             }
@@ -61,7 +75,7 @@ public class Client extends Thread{
 
     }
 
-    public static synchronized boolean dataWrite(byte [] send){
+    public synchronized boolean dataWrite(byte [] send){
         if(!Thread.currentThread().isInterrupted()){
             try {
                 outputStream.write(send);
@@ -79,7 +93,8 @@ public class Client extends Thread{
         }
     }
 
-    public static synchronized byte [] dataRead(){
+    @Nullable
+    public synchronized byte [] dataRead(){
         if(!Thread.currentThread().isInterrupted()){
             try {
                 byte [] get =new byte [512];
