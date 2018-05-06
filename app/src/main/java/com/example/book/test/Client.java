@@ -5,10 +5,6 @@ package com.example.book.test;
  */
 
 
-
-
-import android.support.annotation.Nullable;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 
@@ -23,6 +19,12 @@ public class Client extends Thread{
     private boolean flag = true;
     private static BufferedInputStream inputStream;
     private static BufferedOutputStream outputStream;
+    private static boolean needToRead = false;
+    private static boolean needToSend = false;
+    private static boolean sendIsCompleted = false;
+    private static boolean readIsCompleted = false;
+    private byte [] buffer;
+    private int size;
     @Override
     public void run() {
         super.run();
@@ -50,21 +52,22 @@ public class Client extends Thread{
                     if (!(len>0)){
                         continue;
                     }
-                    NetworkActivity.connected = true;
+                    GameActivity.connected = true;
                     break;
                 }
-                while (!Thread.currentThread().isInterrupted()){
-                    /*if (needToSend && !needToRecieve) {
-                        outputStream.write(dataTosend);
+                while (mClient.isConnected()){
+                    if (needToSend){
+                        outputStream.write(buffer);
                         outputStream.flush();
-                        hasCompleted = true;
+                        needToSend = false;
+                        sendIsCompleted = true;
                     }
-                    if (!needToSend && needToRecieve){
-                        byte [] get =new byte [512];
-                        inputStream.read(get);
-                        dataToRecieve = get;
-                        hasCompleted = true;
-                    }*/
+                    if (needToRead){
+                        buffer = new byte [512];
+                        size = inputStream.read(buffer);
+                        needToRead = false;
+                        readIsCompleted = true;
+                    }
                 }
                 outputStream.close();
                 inputStream.close();
@@ -76,39 +79,34 @@ public class Client extends Thread{
     }
 
     public synchronized boolean dataWrite(byte [] send){
-        if(!Thread.currentThread().isInterrupted()){
-            try {
-                outputStream.write(send);
-                outputStream.flush();
-                return true;
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+        if(mClient.isConnected()){
+            sendIsCompleted = false;
+            buffer = new byte [512];
+            buffer = send;
+            needToSend = true;
+            while(!sendIsCompleted){}
+            return true;
         }
-        else{
-            System.out.println("Connection is interrupted.");
+        else {
+            System.out.println("Connection is closed.");
             return false;
         }
     }
 
-    @Nullable
-    public synchronized byte [] dataRead(){
-        if(!Thread.currentThread().isInterrupted()){
-            try {
-                byte [] get =new byte [512];
-                inputStream.read(get);
-                return get;
+    public synchronized int dataRead(byte [] read){
+        if(mClient.isConnected()){
+            readIsCompleted = false;
+            needToRead = true;
+            while(!readIsCompleted){}
+            int len = size;
+            for (int i = 0;i < len;++i){
+                read[i]=buffer[i];
             }
-            catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
+            return len;
         }
         else{
-            System.out.println("Connection is interrupted.");
-            return null;
+            System.out.println("Connection is closed.");
+            return -1;
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.book.test;
 
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,21 +11,25 @@ import android.widget.Toast;
 
 
 public class GameActivity extends AppCompatActivity {
-
+    public static boolean connected = false;
+    private Server serverThread;
+    private Client clientThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        connect();
+
         Button sendButton = findViewById(R.id.send);
         Button receive = findViewById(R.id.receive);
 
-        System.out.println("ffffffffffffffffffffffffff");
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 byte [] send = {1,2,3,4,5};
-                if (NetworkActivity.isClient) NetworkActivity.clientThread.dataWrite(send);
+                boolean tmp = false;
+                if (NetworkActivity.isClient) tmp=clientThread.dataWrite(send);
             }
         });
         receive.setOnClickListener(new View.OnClickListener() {
@@ -32,15 +37,51 @@ public class GameActivity extends AppCompatActivity {
             public void onClick(View view) {
                 byte [] read = new byte[512];
                 String msg = "9";
-                if (NetworkActivity.isServer) read = NetworkActivity.serverThread.dataRead();
-                msg=new String(read);
+                int len = 0;
+                if (NetworkActivity.isServer) len = serverThread.dataRead(read);
+                msg=new String(read,0,len);
                 System.out.println(msg);
             }
         });
 
     }
 
+    private void connect(){
+        if(MainActivity.isOffline){
+            return;
+        }
+        if(NetworkActivity.isServer){
+            serverThread = new Server ();
+            serverThread.start();
+        }
+        if (NetworkActivity.isClient){
+            clientThread = new Client ();
+            clientThread.start();
+        }
+        new Thread(new Runnable() {
+            private Handler handler = new Handler();
+            @Override
+            public void run() {
+                try {
+                    Thread.currentThread().sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(connected){
+                            Toast.makeText(GameActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
 
+                        }
+                        else {
+                            Toast.makeText(GameActivity.this, "等待超时,请重新尝试建立服务器端", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }).start();
+    }
 
     //Confirm to exit, jump back to mainactivity
     private long exitTime = 0;

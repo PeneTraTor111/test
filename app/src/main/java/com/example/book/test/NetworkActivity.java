@@ -18,11 +18,9 @@ import android.widget.Toast;
 
 public class NetworkActivity extends AppCompatActivity {
 
-    public static boolean connected = false;
-    public static String IP;
+    public static String yourIP;
     public static String inputIP;
-    public static Client clientThread;
-    public static Server serverThread;
+
     public static boolean isServer = false;
     public static boolean isClient = false;
 
@@ -35,7 +33,7 @@ public class NetworkActivity extends AppCompatActivity {
 
 
         TextView tv=findViewById(R.id.showYourIpAddress);
-        tv.setText(IP=getIpAddress());
+        tv.setText(yourIP=getIpAddress());
         tv.setGravity(Gravity.CENTER);
 
         Button client = findViewById(R.id.clientButton);
@@ -57,7 +55,12 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
     private void toBeAServer(){
-        serverThread = new Server ();
+
+        isServer = true;
+        Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
+        startActivity(intent);
+
+        /*serverThread = new Server ();
         serverThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
@@ -87,15 +90,17 @@ public class NetworkActivity extends AppCompatActivity {
                     }
                 });
             }
-        }).start();
-
+        }).start();*/
 
     }
 
     private void toBeAClient(){
         EditText input=findViewById(R.id.ipInput);
         inputIP = input.getText().toString();
-        clientThread = new Client ();
+        isClient = true;
+        Intent intent = new Intent(NetworkActivity.this,GameActivity.class);
+        startActivity(intent);
+       /* clientThread = new Client ();
         clientThread.start();
         Toast.makeText(NetworkActivity.this, "等待连接", Toast.LENGTH_SHORT).show();
 
@@ -133,7 +138,7 @@ public class NetworkActivity extends AppCompatActivity {
                     }
                 });
             }
-        }).start();
+        }).start();*/
 
 
     }
