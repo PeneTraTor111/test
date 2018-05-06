@@ -1,9 +1,5 @@
 package com.example.book.test;
 
-/**
- * Created by BOOK on 2018/5/2.
- */
-
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
